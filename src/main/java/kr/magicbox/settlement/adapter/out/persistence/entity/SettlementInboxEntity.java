@@ -19,7 +19,7 @@ import java.time.Instant;
 public class SettlementInboxEntity extends BaseEntity {
 
     @Column(nullable = false, unique = true)
-    private String kafkaKey;
+    private String key;
 
     @Column(nullable = false)
     private String topic;
@@ -38,9 +38,9 @@ public class SettlementInboxEntity extends BaseEntity {
     private Instant occurredAt;
 
     @Builder
-    public SettlementInboxEntity(String kafkaKey, String topic, Integer partition, Long offset,
+    public SettlementInboxEntity(String key, String topic, Integer partition, Long offset,
                                  SettlementInboxStatus status, Instant occurredAt) {
-        this.kafkaKey = kafkaKey;
+        this.key = key;
         this.topic = topic;
         this.partition = partition;
         this.offset = offset;
