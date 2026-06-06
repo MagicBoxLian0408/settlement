@@ -9,9 +9,11 @@ import kr.magicbox.settlement.application.port.in.HandleSettlementSettleCommandU
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import kr.magicbox.settlement.global.exception.BusinessException;
 import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
+import org.springframework.kafka.retrytopic.DltStrategy;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -24,7 +26,7 @@ public class SettlementCommandKafkaListener {
     private final SettlementInboxJpaRepository settlementInboxJpaRepository;
 
     @Idempotent
-    @RetryableTopic
+    @RetryableTopic(dltStrategy = DltStrategy.FAIL_ON_ERROR, dltTopicSuffix = "-dlt", exclude = {BusinessException.class})
     @KafkaListener(topics = "command.settlement-ready", groupId = "settlement-service")
     public void handleSettlementReadyCommand(ConsumerRecord<String, SettlementReadyCommandEvent> consumerRecord) {
         log.info("[Inbox] settlement-ready command 수신. key={}", consumerRecord.key());
@@ -33,7 +35,7 @@ public class SettlementCommandKafkaListener {
     }
 
     @Idempotent
-    @RetryableTopic
+    @RetryableTopic(dltStrategy = DltStrategy.FAIL_ON_ERROR, dltTopicSuffix = "-dlt", exclude = {BusinessException.class})
     @KafkaListener(topics = "command.settlement-settle", groupId = "settlement-service")
     public void handleSettlementSettleCommand(ConsumerRecord<String, SettlementSettleCommandEvent> consumerRecord) {
         log.info("[Inbox] settlement-settle command 수신. key={}", consumerRecord.key());
