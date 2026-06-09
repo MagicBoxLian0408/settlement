@@ -18,7 +18,7 @@ import java.time.Instant;
 @Table(name = "settlement_inbox")
 public class SettlementInboxEntity extends BaseEntity {
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "inbox_key", nullable = false, unique = true)
     private String key;
 
     @Column(nullable = false)
