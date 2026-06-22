@@ -11,7 +11,7 @@ public record SettlementReadyEvent(
         @JsonProperty("order_id") Long orderId,
         @JsonProperty("order_line_id") Long orderLineId,
         @JsonProperty("occurred_at") Instant occurredAt
-) implements SettlementDomainEvent {
+) implements SettlementDomainEvent, OrderLineIdAware {
 
     @Override
     public String key() {
