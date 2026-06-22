@@ -20,17 +20,9 @@ public class SettlementOutboxEntity extends BaseEntity {
     @Column(columnDefinition = "JSON", nullable = false)
     private String payload;
 
-    @Column(name = "order_id")
-    private Long orderId;
-
-    @Column(name = "order_line_id")
-    private Long orderLineId;
-
     @Builder
-    public SettlementOutboxEntity(String eventType, String payload, Long orderId, Long orderLineId) {
+    public SettlementOutboxEntity(String eventType, String payload) {
         this.eventType = eventType;
         this.payload = payload;
-        this.orderId = orderId;
-        this.orderLineId = orderLineId;
     }
 }
