@@ -3,13 +3,11 @@ package kr.magicbox.settlement.adapter.in.kafka;
 import kr.magicbox.settlement.adapter.in.kafka.annotation.Idempotent;
 import kr.magicbox.settlement.adapter.in.kafka.event.SettlementReadyCommandEvent;
 import kr.magicbox.settlement.adapter.in.kafka.event.SettlementSettleCommandEvent;
-import kr.magicbox.settlement.adapter.out.persistence.repository.SettlementInboxJpaRepository;
 import kr.magicbox.settlement.application.port.in.HandleSettlementReadyCommandUseCase;
 import kr.magicbox.settlement.application.port.in.HandleSettlementSettleCommandUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.stereotype.Component;
@@ -21,7 +19,6 @@ public class SettlementCommandKafkaListener {
 
     private final HandleSettlementReadyCommandUseCase handleSettlementReadyCommandUseCase;
     private final HandleSettlementSettleCommandUseCase handleSettlementSettleCommandUseCase;
-    private final SettlementInboxJpaRepository settlementInboxJpaRepository;
 
     @Idempotent
     @RetryableTopic
@@ -42,10 +39,4 @@ public class SettlementCommandKafkaListener {
                 event.orderId(), event.orderLineId(), event.sellerId(), event.grossAmount());
     }
 
-    @DltHandler
-    public void handleDlt(ConsumerRecord<String, ?> consumerRecord) {
-        log.error("[Inbox] DLT 전환. topic={}, partition={}, offset={}", consumerRecord.topic(), consumerRecord.partition(), consumerRecord.offset());
-        settlementInboxJpaRepository.findByTopicAndPartitionAndOffset(consumerRecord.topic(), consumerRecord.partition(), consumerRecord.offset())
-                .ifPresent(inbox -> inbox.markDeadLettered());
-    }
 }
