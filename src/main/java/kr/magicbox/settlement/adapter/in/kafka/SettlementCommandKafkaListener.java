@@ -27,7 +27,7 @@ public class SettlementCommandKafkaListener {
     @RetryableTopic
     @KafkaListener(topics = "command.settlement-ready", groupId = "settlement-service")
     public void handleSettlementReadyCommand(ConsumerRecord<String, SettlementReadyCommandEvent> consumerRecord) {
-        log.info("[Inbox] settlement-ready command 수신. eventId={}", consumerRecord.key());
+        log.info("[Inbox] settlement-ready command 수신. key={}", consumerRecord.key());
         SettlementReadyCommandEvent event = consumerRecord.value();
         handleSettlementReadyCommandUseCase.handleSettlementReadyCommand(event.orderId(), event.orderLineId());
     }
@@ -36,7 +36,7 @@ public class SettlementCommandKafkaListener {
     @RetryableTopic
     @KafkaListener(topics = "command.settlement-settle", groupId = "settlement-service")
     public void handleSettlementSettleCommand(ConsumerRecord<String, SettlementSettleCommandEvent> consumerRecord) {
-        log.info("[Inbox] settlement-settle command 수신. eventId={}", consumerRecord.key());
+        log.info("[Inbox] settlement-settle command 수신. key={}", consumerRecord.key());
         SettlementSettleCommandEvent event = consumerRecord.value();
         handleSettlementSettleCommandUseCase.handleSettlementSettleCommand(
                 event.orderId(), event.orderLineId(), event.sellerId(), event.grossAmount());
