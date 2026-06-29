@@ -21,7 +21,7 @@ public class PaymentEventKafkaListener {
     @RetryableTopic
     @KafkaListener(topics = "outbox.event.payment-cancel-succeeded", groupId = "settlement-service")
     public void handlePaymentCancelSucceeded(ConsumerRecord<String, PaymentCancelSucceededEvent> consumerRecord) {
-        log.info("[Inbox] payment.cancel.succeeded 이벤트 수신. eventId={}", consumerRecord.key());
+        log.info("[Inbox] payment.cancel.succeeded 이벤트 수신. key={}", consumerRecord.key());
         handlePaymentCancelSucceededUseCase.handlePaymentCancelSucceeded(consumerRecord.value().orderId());
     }
 
